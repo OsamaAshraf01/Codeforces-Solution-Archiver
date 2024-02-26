@@ -1,2 +1,2 @@
-@echo off
+@ECHO off
 python codeforces.py
