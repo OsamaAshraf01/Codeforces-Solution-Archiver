@@ -1,2 +1,2 @@
 @ECHO off
-python codeforces.py
+"PYTHON_PATH" codeforces.py

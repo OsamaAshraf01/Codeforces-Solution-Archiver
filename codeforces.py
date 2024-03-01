@@ -9,6 +9,7 @@ repo = Repo.init('Code\\').git
 handle = "YOUR_HANDLE"
 URL = f"https://codeforces.com/api/user.status?handle={handle}"
 data = requests.get(URL, verify=False).json()['result']
+SPECIAL_CHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
 
 
 
@@ -38,26 +39,54 @@ with open('data.json', 'w') as f:
 with open('data.json', 'rb') as f:
     data = json.load(f)
 
+# Get uploaded problems
+with open('uploaded.json', 'rb') as f:
+    uploaded = json.load(f)
+
+
 codes = []
 
-for problem in data:
-    URL = f"https://codeforces.com/contest/{problem['contest_id']}/submission/{problem['submission_id']}"
-    r = requests.get(URL, verify=False)
-
-    soup = BeautifulSoup(r.content, 'html5lib')
-
-    code = soup.select("pre")
-    os.system('mkdir Code\\'+problem['problem_index'])
-    with open(f'Code\\{problem['problem_index']}\\{problem['problem_index']+' - '+problem['problem_name']}.cpp', 'w') as f:
-        f.write(f"// Link To Problem: https://codeforces.com/contest/{problem['contest_id']}/problem/{problem['problem_index']}\n\n")
-        f.write(code[0].text)
+for problem in data[::-1]:
     
-    repo.add('*')
-    index = Repo.init("Code\\").index
-    index.commit(f"{problem['problem_tags']}")
+        URL = f"https://codeforces.com/contest/{problem['contest_id']}/submission/{problem['submission_id']}"
+        r = requests.get(URL, verify=False)
+
+        soup = BeautifulSoup(r.content, 'html5lib')
+
+        code = soup.select("pre")
+        if not os.path.exists('Code\\'+problem['problem_index']):
+            os.makedirs('Code\\'+problem['problem_index'])
+
+        cleared_name = ''
+        for i in problem['problem_name']:
+            if i not in SPECIAL_CHARACTERS:
+                cleared_name += i
+
+        with open(f'Code\\{problem['problem_index']}\\{problem['problem_index']+' - '+cleared_name}.cpp', 'w') as f:
+            f.write(f"// Link To Problem: https://codeforces.com/contest/{problem['contest_id']}/problem/{problem['problem_index']}\n\n")
+            f.write(code[0].text)
+        
+        repo.add('*')
+        index = Repo.init("Code\\").index
+        index.commit(f"{problem['problem_tags']}")
 
 
+        if problem not in uploaded:
+            # Send Message on Telegram
+            token = 'YOUR_BOT_TOKEN'
+            chat_id = 'CHAT_ID'
+            message = f"Problem {problem['problem_index']} - {problem['problem_name']} has been added to the repository ✅\n\nLink: https://codeforces.com/contest/{problem['contest_id']}/problem/{problem['problem_index']}"
 
-# Add origin to the repo and push the changes
+            method = f'sendMessage?chat_id={chat_id}&text={message}'
+
+            URL = f'https://api.telegram.org/bot{token}/{method}'
+            r = requests.get(URL)
+
+
+# Update the uploaded file
+with open('uploaded.json', 'w') as f:
+    json.dump(data, f)
+
+# Push Changes to GitHub
 os.system('push.bat')
 
