@@ -24,11 +24,11 @@ def send_message(token: str, chat_id: str):
     r = requests.get(url)
 
 
-HANDLE = "Osama_Ashraf01"
+HANDLE = "YOUR_HANDLE"
 URL = f"https://codeforces.com/api/user.status?handle={HANDLE}"
 SPECIAL_CHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
-TELEGRAM_TOKEN = "6997981447:AAG9lbuT79DwoaxrvtfrLOWfY2VPmLDd3q4"
-CHAT_ID = "-1002082990507"
+TELEGRAM_TOKEN = "TELEGRAM_BOT_TOKEN_FROM_BOT_FATHER"
+CHAT_ID = "CHAT_ID"
 
 
 # Get submissions from codeforces
