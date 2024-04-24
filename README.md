@@ -29,8 +29,8 @@ This Python script automates uploading your accepted Codeforces solutions to you
 
 - Put your Codeforces handle
 
-- Put your Telegram Bot's token & Chat ID to send messages
->[!Tip] If you don't have bot token, you can get one using <a href="https://telegram.me/BotFather">BotFather</a>
+- Put your Telegram Bot's token & Chat ID to send messages.
+	- Note: If you don't have bot token, you can get one using <a href="https://telegram.me/BotFather">BotFather</a>
 
-- Add 'auto_run.bat' file to your task scheduler to run automatically everyday
+- Add 'auto_run.bat' file to your task scheduler to run automatically everyday.
 
