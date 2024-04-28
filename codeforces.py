@@ -6,7 +6,7 @@ from git import Repo
 repo = Repo.init('Code\\').git
 # TODO: Support for all languages
 
-
+# Functions
 def clear(text: str)->str:
     cleared_text = ""
     for i in text:
@@ -21,9 +21,15 @@ def send_message(token: str, chat_id: str):
     method = f'sendMessage?chat_id={chat_id}&text={message}'
 
     url = f'https://api.telegram.org/bot{token}/{method}'
-    r = requests.get(url)
+    GET(url)
+
+def GET(*args, **kwargs):
+    return requests.get(*args, **kwargs)
 
 
+
+
+# Constants
 HANDLE = "YOUR_HANDLE"
 URL = f"https://codeforces.com/api/user.status?handle={HANDLE}"
 SPECIAL_CHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
@@ -32,7 +38,7 @@ CHAT_ID = "CHAT_ID"
 
 
 # Get submissions from codeforces
-data = requests.get(URL, verify=False).json()['result']
+data = GET(URL, verify=False).json()['result']
 
 # Filter Accepted Submissions
 accepted = []
@@ -72,7 +78,7 @@ for problem in data[::-1]:
         os.makedirs(INDEX)
 
     # Get Code
-    r = requests.get(URL, verify=False)
+    r = GET(URL, verify=False)
     soup = BeautifulSoup(r.content, 'html5lib')
     code = soup.select("pre")[0]
     with open(FILE_NAME, 'w') as f:
